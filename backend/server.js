@@ -8,17 +8,25 @@ import productRouter from "./routes/productRoute.js";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 
-//App Config
+// App Config
 const app = express();
 const port = process.env.PORT || 4000;
 connectDB();
 connectCloudinary();
 
-//middlewares
-app.use(express.json());
-app.use(cors());
+// Allowed Origins
+const allowedOrigins = [
+  // "http://localhost:5173", // Local Frontend
+  // "http://localhost:5174", // Local Admin Panel
+  "https://e-commerce-frontend-inky-nu.vercel.app", // Deployed Frontend
+  "https://e-commerce-admin-black.vercel.app", // Deployed Admin Panel
+];
 
-//api endpoints
+// Middlewares
+app.use(express.json());
+app.use(cors({ origin: allowedOrigins, credentials: true }));
+
+// API Endpoints
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
@@ -28,6 +36,7 @@ app.get("/", (req, res) => {
   res.send("Api Working");
 });
 
+// Start Server
 app.listen(port, () => {
   console.log(`Server Started on PORT: ${port}`);
 });
